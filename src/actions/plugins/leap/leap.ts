@@ -50,6 +50,9 @@ export class Leap {
     });
 
     map.forEach((markers) => {
+      if (markers.length === 1) {
+        return;
+      }
       if (configuration.leap.bidirectionalSearch) markers = this.reorder(markers);
 
       const markerNames = generateMarkerNames(markers.length);
