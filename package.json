@@ -3,7 +3,7 @@
   "displayName": "Vim",
   "description": "Vim emulation for Visual Studio Code",
   "icon": "images/icon.png",
-  "version": "1.26.1",
+  "version": "1.26.2",
   "publisher": "vscodevim",
   "galleryBanner": {
     "color": "#e3f4ff",
@@ -614,7 +614,8 @@
         "vim.matchpairs": {
           "type": "string",
           "markdownDescription": "Characters that form pairs. The % command jumps from one to the other. Only character pairs are allowed that are different, thus you cannot jump between two double quotes. The characters must be separated by a colon. The pairs must be separated by a comma.",
-          "default": "(:),{:},[:]"
+          "default": "(:),{:},[:]",
+          "pattern": "^(.:.)?(,.:.)*$"
         },
         "vim.camelCaseMotion.enable": {
           "type": "boolean",
@@ -830,7 +831,8 @@
           "type": "number",
           "description": "How much search or command history should be remembered.",
           "default": 50,
-          "minimum": 1
+          "minimum": 1,
+          "maximum": 10000
         },
         "vim.autoindent": {
           "type": "boolean",
@@ -848,7 +850,7 @@
         },
         "vim.handleKeys": {
           "type": "object",
-          "description": "Delegate certain key combinations back to VSCode to be handled natively.",
+          "description": "Delegate certain key combinations back to VS Code to be handled natively.",
           "default": {
             "<C-d>": true,
             "<C-s>": false,
@@ -1019,12 +1021,12 @@
         },
         "vim.neovimUseConfigFile": {
           "type": "boolean",
-          "markdownDescription": "Use a config file for Neovim, specified by `vim.neovimConfigPath`.",
+          "markdownDescription": "Use a config file for Neovim, specified by `#vim.neovimConfigPath#`.",
           "default": false
         },
         "vim.neovimConfigPath": {
           "type": "string",
-          "markdownDescription": "Path to Neovim configuration file. `vim.neovimUseConfigFile` must be enabled. If path is left blank, Neovim will use its default config path, i.e. `~/.config/nvim/init.vim` or 'C:\\Users\\USERNAME\\AppData\\Local\\nvim\\init.vim'.",
+          "markdownDescription": "Path to Neovim configuration file. `#vim.neovimUseConfigFile#` must be enabled. If path is left blank, Neovim will use its default config path, i.e. `~/.config/nvim/init.vim` or 'C:\\Users\\USERNAME\\AppData\\Local\\nvim\\init.vim'.",
           "default": "",
           "scope": "machine"
         },
@@ -1190,8 +1192,9 @@
     },
     "languages": [
       {
-        "id": "vimrc",
+        "id": "Vimscript",
         "extensions": [
+          ".vim",
           ".vimrc"
         ],
         "configuration": "./language-configuration.json"
@@ -1199,9 +1202,9 @@
     ],
     "grammars": [
       {
-        "language": "vimrc",
-        "scopeName": "source.vimrc",
-        "path": "./syntaxes/vimrc.tmLanguage.json"
+        "language": "Vimscript",
+        "scopeName": "source.vimscript",
+        "path": "./syntaxes/vimscript.tmLanguage.json"
       }
     ]
   },
@@ -1237,11 +1240,11 @@
     "@types/glob": "8.1.0",
     "@types/lodash": "4.14.200",
     "@types/mocha": "10.0.3",
-    "@types/node": "18.18.6",
+    "@types/node": "18.18.7",
     "@types/parsimmon": "1.10.8",
     "@types/sinon": "10.0.20",
     "@types/vscode": "1.74.0",
-    "@vscode/test-electron": "2.3.5",
+    "@vscode/test-electron": "2.3.6",
     "circular-dependency-plugin": "^5.2.2",
     "clean-webpack-plugin": "4.0.0",
     "event-stream": "4.0.1",
