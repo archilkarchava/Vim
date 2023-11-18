@@ -1042,7 +1042,7 @@ class CommandOpenFile extends BaseCommand {
         bang: false,
         opt: [],
         file: filePath,
-        cmd: isNaN(line) ? undefined : { type: 'line_number', line },
+        cmd: isNaN(line) ? undefined : { type: 'line_number', line: line - 1 },
         createFileIfNotExists: false,
       });
       fileCommand.execute(vimState);
