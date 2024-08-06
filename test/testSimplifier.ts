@@ -144,12 +144,12 @@ class DocState {
     this.lines = lines;
   }
 
-  cursor: Position;
-  lines: string[];
+  public readonly cursor: Position; // TODO(#4582): support multiple cursors
+  public readonly lines: string[];
 }
 
 /**
- * Tokenize a string like "abc<Esc>d<C-c>" into ["a", "b", "c", "<Esc>", "d", "<C-c>"]
+ * Tokenize a string like `"abc<Esc>d<C-c>"` into `["a", "b", "c", "<Esc>", "d", "<C-c>"]`
  */
 function tokenizeKeySequence(sequence: string): string[] {
   let isBracketedKey = false;
