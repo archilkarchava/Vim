@@ -64,14 +64,14 @@ export class Leap {
   }
 
   private reorder(group: Marker[]) {
-    let result: Marker[] = [];
+    const result: Marker[] = [];
 
     const backwardMatches = group.filter((m) => m.direction === LeapSearchDirection.Backward);
     const forwardMatches = group.filter((m) => m.direction === LeapSearchDirection.Forward);
 
     let i = 0;
-    let backwardMatchesLen = backwardMatches.length;
-    let forwardMatchesLen = forwardMatches.length;
+    const backwardMatchesLen = backwardMatches.length;
+    const forwardMatchesLen = forwardMatches.length;
 
     while (i < backwardMatchesLen && i < forwardMatchesLen) {
       result.push(backwardMatches[i]);
@@ -157,12 +157,12 @@ export class Leap {
   }
 
   public changeCursorStopPosition(position: Position) {
-    const leap = getLeapInstance();
+    const leapInstance = getLeapInstance();
 
     const isVisualModel =
-      leap.previousMode === Mode.Visual ||
-      leap.previousMode === Mode.VisualLine ||
-      leap.previousMode === Mode.VisualBlock;
+      leapInstance.previousMode === Mode.Visual ||
+      leapInstance.previousMode === Mode.VisualLine ||
+      leapInstance.previousMode === Mode.VisualBlock;
 
     if (isVisualModel) {
       if (configuration.leap.bidirectionalSearch) {
@@ -193,11 +193,12 @@ export class Leap {
     }
   }
   private containMarkerBackwardJump(position: Position) {
-    let maxCharacter = this.vimState.editor.document.lineAt(position.line).range.end.character - 1;
+    const maxCharacter =
+      this.vimState.editor.document.lineAt(position.line).range.end.character - 1;
 
     this.vimState.cursorStopPosition = new Position(
       position.line,
-      Math.min(position.character + 1, maxCharacter)
+      Math.min(position.character + 1, maxCharacter),
     );
   }
   private containMarkerForwardJump(position: Position) {
@@ -239,5 +240,5 @@ export function getLeapInstance(): Leap {
 }
 
 export function disposeLeap() {
-  leap?.cleanupMarkers()
+  leap?.cleanupMarkers();
 }
