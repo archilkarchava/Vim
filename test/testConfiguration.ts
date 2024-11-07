@@ -37,7 +37,7 @@ export class Configuration implements IConfiguration {
     bidirectionalSearch: false,
     marker: {
       backgroundColors: ['#ccff88', '#99ccff'],
-      charColor:"#000000"
+      charColor: '#000000',
     },
   };
   surround = false;
@@ -160,4 +160,5 @@ export class Configuration implements IConfiguration {
   handleKeys = {
     '<C-d>': true,
   };
+  langmap = '';
 }

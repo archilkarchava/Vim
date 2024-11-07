@@ -114,8 +114,7 @@ class StatusBarImpl implements vscode.Disposable {
     }
 
     if (vimState.macro) {
-      const macroText = 'Recording @' + vimState.macro.registerName;
-      text.push(macroText);
+      text.push('recording @' + vimState.macro.registerKey);
     }
 
     StatusBar.setText(vimState, text.join(' '));
@@ -263,8 +262,7 @@ export function statusBarCommandText(vimState: VimState): string {
     case Mode.LeapMode:
       const leap = getLeapInstance();
       if (leap.isRepeatLastSearch) {
-        const searchString =
-          leap.firstSearchString + leap.leapAction!.keysPressed[0];
+        const searchString = leap.firstSearchString + leap.leapAction!.keysPressed[0];
         return 's' + searchString;
       }
       return vimState.recordedState.commandString;

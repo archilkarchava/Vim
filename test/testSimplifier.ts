@@ -15,7 +15,7 @@ import { Register } from '../src/register/register';
 import { globalState } from '../src/state/globalState';
 import { StatusBar } from '../src/statusBar';
 import { TextEditor } from '../src/textEditor';
-import { assertEqualLines, reloadConfiguration } from './testUtils';
+import { assertEqualLines, reloadConfiguration, setupWorkspace } from './testUtils';
 
 function newTestGeneric<T extends ITestObject | ITestWithRemapsObject>(
   testObj: T,
@@ -194,6 +194,12 @@ function tokenizeKeySequence(sequence: string): string[] {
 }
 
 async function testIt(testObj: ITestObject): Promise<ModeHandler> {
+  if (vscode.window.activeTextEditor === undefined) {
+    await setupWorkspace({
+      config: testObj.config,
+    });
+  }
+
   const editor = vscode.window.activeTextEditor;
   assert(editor, 'Expected an active editor');
 
@@ -212,9 +218,10 @@ async function testIt(testObj: ITestObject): Promise<ModeHandler> {
         start.lines.join('\n'),
       );
     }),
+    'Edit failed',
   );
   if (testObj.saveDocBeforeTest) {
-    assert.ok(await editor.document.save());
+    assert.ok(await editor.document.save(), 'Save failed');
   }
   editor.selections = [new vscode.Selection(start.cursor, start.cursor)];
 
@@ -232,11 +239,11 @@ async function testIt(testObj: ITestObject): Promise<ModeHandler> {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       .stub(testObj.stub.stubClass.prototype, testObj.stub.methodName)
       .resolves(testObj.stub.returnValue);
-    await modeHandler.handleMultipleKeyEvents(tokenizeKeySequence(testObj.keysPressed));
+    await modeHandler.handleMultipleKeyEvents(tokenizeKeySequence(testObj.keysPressed), false);
     confirmStub.restore();
   } else {
     // Assumes key presses are single characters for now
-    await modeHandler.handleMultipleKeyEvents(tokenizeKeySequence(testObj.keysPressed));
+    await modeHandler.handleMultipleKeyEvents(tokenizeKeySequence(testObj.keysPressed), false);
   }
 
   // Check given end output is correct
@@ -253,7 +260,7 @@ async function testIt(testObj: ITestObject): Promise<ModeHandler> {
 
   if (testObj.endMode !== undefined) {
     assert.strictEqual(
-      Mode[modeHandler.currentMode],
+      Mode[modeHandler.vimState.currentMode],
       Mode[testObj.endMode],
       "Didn't enter correct mode.",
     );
@@ -388,7 +395,7 @@ async function testItWithRemaps(testObj: ITestWithRemapsObject): Promise<ModeHan
           p1Resolve({
             lines: modeHandler.vimState.document.getText(),
             position: modeHandler.vimState.editor.selection.start,
-            endMode: modeHandler.currentMode,
+            endMode: modeHandler.vimState.currentMode,
           });
         }, timeoutOffset);
       });
@@ -418,7 +425,7 @@ async function testItWithRemaps(testObj: ITestWithRemapsObject): Promise<ModeHan
             p2Resolve({
               lines: modeHandler.vimState.document.getText(),
               position: modeHandler.vimState.editor.selection.start,
-              endMode: modeHandler.currentMode,
+              endMode: modeHandler.vimState.currentMode,
             });
           }, timeout + timeoutOffset);
         } else {
@@ -428,7 +435,7 @@ async function testItWithRemaps(testObj: ITestWithRemapsObject): Promise<ModeHan
     };
 
     // Assumes key presses are single characters for now
-    await modeHandler.handleMultipleKeyEvents(tokenizeKeySequence(step.keysPressed));
+    await modeHandler.handleMultipleKeyEvents(tokenizeKeySequence(step.keysPressed), false);
 
     // Only start the end check promises after the keys were handled to make sure they don't
     // finish before all the keys are pressed. The keys handler above will resolve when the
