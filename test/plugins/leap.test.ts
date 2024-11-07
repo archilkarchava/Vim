@@ -9,10 +9,10 @@ function leapCommand(key: 's' | 'S', searchStrings: string[], jumpKeys: string[]
 suite('leap plugin', () => {
   suite('normal mode', () => {
     setup(async () => {
-      const configuration = new Configuration();
-      configuration.leap.enable = true;
+      const config = new Configuration();
+      config.leap.enable = true;
 
-      await setupWorkspace(configuration);
+      await setupWorkspace({ config });
     });
 
     teardown(cleanUpWorkspace);
@@ -225,11 +225,11 @@ suite('leap plugin', () => {
 
   suite('bidirectional search mode', () => {
     setup(async () => {
-      const configuration = new Configuration();
-      configuration.leap.enable = true;
-      configuration.leap.bidirectionalSearch = true;
+      const config = new Configuration();
+      config.leap.enable = true;
+      config.leap.bidirectionalSearch = true;
 
-      await setupWorkspace(configuration);
+      await setupWorkspace({ config });
     });
 
     teardown(cleanUpWorkspace);
@@ -301,11 +301,11 @@ suite('leap plugin', () => {
 
   suite('caseSensitive', () => {
     setup(async () => {
-      const configuration = new Configuration();
-      configuration.leap.enable = true;
-      configuration.leap.caseSensitive = true;
+      const config = new Configuration();
+      config.leap.enable = true;
+      config.leap.caseSensitive = true;
 
-      await setupWorkspace(configuration);
+      await setupWorkspace({ config });
     });
 
     teardown(cleanUpWorkspace);
